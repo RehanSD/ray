@@ -15,7 +15,7 @@ assert sys.version_info >= (3, ), (
 
 from ray.experimental.serve.router import (DeadlineAwareRouter,
                                            SingleQuery)  # noqa: E402
-from ray.experimental.serve.frontend import HTTPFrontendActor  # noqa: E402
+from ray.experimental.serve.frontend import (HTTPFrontendActor, ZMQFrontendActor, ZMQClient)  # noqa: E402
 from ray.experimental.serve.mixin import (RayServeMixin,
                                           batched_input)  # noqa: E402
 
@@ -23,6 +23,8 @@ __all__ = [
     "DeadlineAwareRouter",
     "SingleQuery",
     "HTTPFrontendActor",
+    "ZMQFrontendActor",
+    "ZMQClient",
     "RayServeMixin",
     "batched_input",
 ]
