@@ -60,6 +60,33 @@ cc_library(
     ],
 )
 
+cc_library(
+    name = "janus_lib",
+    srcs = glob(
+        [
+            "src/ray/experimental/janus/*.cc",
+        ],
+        exclude = [
+            "src/ray/experimental/janus/*_test.cc",
+        ],
+    ),
+    hdrs = glob([
+        "src/ray/experimental/janus/*.h",
+    ]),
+    copts = COPTS,
+    deps = [
+        ":gcs",
+        ":gcs_fbs",
+        ":node_manager_fbs",
+        ":object_manager",
+        ":ray_common",
+        ":ray_util",
+        "@boost//:asio",
+        "@com_google_googletest//:gtest",
+        "@plasma//:plasma_client",
+    ],
+)
+
 cc_test(
     name = "lineage_cache_test",
     srcs = ["src/ray/raylet/lineage_cache_test.cc"],
@@ -371,6 +398,16 @@ pyx_library(
     deps = ["//:raylet_lib"],
 )
 
+pyx_library(
+    name = "_janus",
+    srcs = glob([
+        "python/ray/experimental/serve/janus/__init__.py",
+        "python/ray/experimental/serve/janus/_janus.pyx",
+        "python/ray/experimental/serve/janus/includes/*.pxd",
+        "python/ray/experimental/serve/janus/includes/*.pxi",
+    ]),
+)
+
 cc_binary(
     name = "raylet_library_java.so",
     srcs = [
@@ -547,6 +584,7 @@ genrule(
     name = "ray_pkg",
     srcs = [
         "python/ray/_raylet.so",
+        "python/ray/experimental/serve/janus/_reactive_controller.so",
         "//:python_sources",
         "//:python_gcs_fbs",
         "//:python_node_manager_fbs",
@@ -562,6 +600,8 @@ genrule(
         set -x &&
         mkdir -p python/ray &&
         cp $(location python/ray/_raylet.so) python/ray &&
+        mkdir -p python/ray/experimental/serve/janus &&
+        cp $(location python/ray/experimental/serve/janus/_reactive_controller.so) python/ray/experimental/serve/janus &&
         mkdir -p python/ray/core/src/ray/thirdparty/redis/src/ &&
         cp $(location //:redis-server) python/ray/core/src/ray/thirdparty/redis/src/ &&
         cp $(location //:redis-cli) python/ray/core/src/ray/thirdparty/redis/src/ &&
@@ -578,3 +618,4 @@ genrule(
         mv python $(location ray_pkg)
         """,
 )
+
