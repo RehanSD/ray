@@ -23,9 +23,9 @@ using namespace clipper;
 
 constexpr int MAX_IDLE_TIME_SECS = 15;
 
-class FineGrainedReactiveComponentNoOpt {
+class ReactiveController {
  public:
-  FineGrainedReactiveComponentNoOpt(
+  ReactiveController(
       std::vector<std::shared_ptr<ClipperReplica>> initial_replica_set, int actions_port,
       std::shared_ptr<ClientMetrics> metrics, long long slo_micros, bool take_reactive_action,
       std::map<std::string, std::tuple<int, float, float, float>> model_info, float max_load,

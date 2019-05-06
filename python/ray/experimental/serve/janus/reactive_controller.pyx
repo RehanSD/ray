@@ -1,6 +1,6 @@
 #!python
 # cython: embedsignature=True, binding=True
-cdef extern from "../../../src/ray/experimental/janus/fib.h":
+cdef extern from "../../../src/ray/experimental/janus/reactive_controller.h":
    int fib(int s)
 
 def c_fib(int n):

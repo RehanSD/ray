@@ -12,7 +12,6 @@ from ray.experimental.serve.examples.halt import SleepOnFirst
 from ray.experimental.serve.router import DeadlineAwareRouter, start_router
 from ray.experimental.serve.object_id import unwrap
 
-
 @pytest.fixture(scope="module")
 def router():
     # We need at least 5 workers so resource won't be oversubscribed

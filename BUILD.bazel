@@ -393,7 +393,7 @@ pyx_library(
     name = "_janus",
     srcs = glob([
         "python/ray/experimental/serve/janus/__init__.py",
-        "python/ray/experimental/serve/janus/_reactive_controller.pyx",
+        "python/ray/experimental/serve/janus/reactive_controller.pyx",
         "python/ray/experimental/serve/janus/includes/*.pxd",
         "python/ray/experimental/serve/janus/includes/*.pxi",
     ]),
@@ -576,7 +576,7 @@ genrule(
     name = "ray_pkg",
     srcs = [
         "python/ray/_raylet.so",
-        "python/ray/experimental/serve/janus/_reactive_controller.so",
+        "python/ray/experimental/serve/janus/reactive_controller.so",
         "//:python_sources",
         "//:python_gcs_fbs",
         "//:python_node_manager_fbs",
@@ -593,7 +593,7 @@ genrule(
         mkdir -p python/ray &&
         cp $(location python/ray/_raylet.so) python/ray &&
         mkdir -p python/ray/experimental/serve/janus &&
-        cp $(location python/ray/experimental/serve/janus/_reactive_controller.so) python/ray/experimental/serve/janus &&
+        cp $(location python/ray/experimental/serve/janus/reactive_controller.so) python/ray/experimental/serve/janus &&
         mkdir -p python/ray/core/src/ray/thirdparty/redis/src/ &&
         cp $(location //:redis-server) python/ray/core/src/ray/thirdparty/redis/src/ &&
         cp $(location //:redis-cli) python/ray/core/src/ray/thirdparty/redis/src/ &&

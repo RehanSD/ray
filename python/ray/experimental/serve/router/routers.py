@@ -12,6 +12,8 @@ from ray.experimental.serve.utils.priority_queue import PriorityQueue
 
 import json
 
+from ray.experimental.serve.janus import reactive_controller
+
 ACTOR_NOT_REGISTERED_MSG: Callable = (
     lambda name: ("Actor {} is not registered with this router. Please use "
                   "'router.register_actor.remote(...)' "
