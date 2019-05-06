@@ -1,9 +1,9 @@
 #!python
 # cython: embedsignature=True, binding=True
-cdef extern from "fib.hpp":
+cdef extern from "../../../src/ray/experimental/janus/fib.h":
    int fib(int s)
 
-def fib(int n):
+def c_fib(int n):
    return fib(n)
 #   cdef int i
 #   cdef double a=0.0, b=1.0

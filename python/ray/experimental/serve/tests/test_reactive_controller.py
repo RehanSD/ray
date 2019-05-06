@@ -2,7 +2,7 @@ from ray.experimental.serve.janus import _reactive_controller
 
 def test_fib():
 
-    value = _reactive_controller.fib(6)
+    value = _reactive_controller.c_fib(6)
 
     assert value == 8
 
