@@ -60,33 +60,6 @@ cc_library(
     ],
 )
 
-cc_library(
-    name = "janus_lib",
-    srcs = glob(
-        [
-            "src/ray/experimental/janus/*.cc",
-        ],
-        exclude = [
-            "src/ray/experimental/janus/*_test.cc",
-        ],
-    ),
-    hdrs = glob([
-        "src/ray/experimental/janus/*.h",
-    ]),
-    copts = COPTS,
-    deps = [
-        ":gcs",
-        ":gcs_fbs",
-        ":node_manager_fbs",
-        ":object_manager",
-        ":ray_common",
-        ":ray_util",
-        "@boost//:asio",
-        "@com_google_googletest//:gtest",
-        "@plasma//:plasma_client",
-    ],
-)
-
 cc_test(
     name = "lineage_cache_test",
     srcs = ["src/ray/raylet/lineage_cache_test.cc"],
@@ -402,7 +375,7 @@ pyx_library(
     name = "_janus",
     srcs = glob([
         "python/ray/experimental/serve/janus/__init__.py",
-        "python/ray/experimental/serve/janus/_janus.pyx",
+        "python/ray/experimental/serve/janus/_reactive_controller.pyx",
         "python/ray/experimental/serve/janus/includes/*.pxd",
         "python/ray/experimental/serve/janus/includes/*.pxi",
     ]),
