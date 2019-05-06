@@ -60,6 +60,24 @@ cc_library(
     ],
 )
 
+cc_library(
+    name = "janus_lib",
+    srcs = glob(
+        [
+            "src/ray/experimental/janus/*.cc",
+        ],
+        exclude = [
+            "src/ray/experimental/janus/mock_gcs_client.cc",
+            "src/ray/experimental/janus/monitor_main.cc",
+            "src/ray/experimental/janus/*_test.cc",
+        ],
+    ),
+    hdrs = glob([
+        "src/ray/experimental/janus/*.h",
+    ]),
+    copts = COPTS
+)
+
 cc_test(
     name = "lineage_cache_test",
     srcs = ["src/ray/raylet/lineage_cache_test.cc"],
@@ -379,6 +397,7 @@ pyx_library(
         "python/ray/experimental/serve/janus/includes/*.pxd",
         "python/ray/experimental/serve/janus/includes/*.pxi",
     ]),
+    deps = ["//:janus_lib"]
 )
 
 cc_binary(
