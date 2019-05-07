@@ -307,7 +307,7 @@ cdef class JanusRouter:
    cdef unordered_map[float, int] replicas_per_model_
    cdef unordered_map[float, float] model_throughput_
    cdef unordered_map[float, float] model_scale_factors_
-   cdef unordered_map[float, int] current_arrival_count_
+   cdef unordered_map[float, float] current_arrival_count_
 
    # __cinit__ with
    # arrival_max_counts_per_model

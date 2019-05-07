@@ -20,8 +20,72 @@ double fib(int n) {
     return a;
 }
 
-std::string run_monitor_thread(){
-   return "monitor";
+std::string run_monitor_thread(std::unordered_map<std::string, float> model_throughputs_,
+  std::unordered_map<std::string, float> last_model_scale_snapshot_,
+  std::unordered_map<std::string, int> model_num_replicas_,
+  std::unordered_map<std::string, float> model_max_loads_,
+  std::unordered_map<float, float> current_arrival_counts_,
+  std::unordered_map<float, int> arrival_curve_max_counts){
+     int iter_number = 0;
+
+  // bool lambda_is_initialized = false;
+  int iter_sleep_time_ms = 1000;
+
+  auto last_add_replica_timestamp = std::chrono::system_clock::now();
+  bool optimizer_running = false;
+  int num_optimizer_runs = 0;
+  int last_iter_time_ms = 0.0;
+  bool reactive_comp_activated = false;
+
+  /* std::this_thread::sleep_for(std::chrono::seconds(30)); */
+
+  while (active_) {
+    iter_number += 1;
+    int sleep_time = iter_sleep_time_ms - last_iter_time_ms;
+    if (sleep_time > 100) {
+      std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
+    }
+
+    auto iter_start = std::chrono::system_clock::now();
+
+    if (total_snapshot_queries_ > 5000) {
+      /* std::cout << "Updating last_model_scale_snapshot_ with " << total_snapshot_queries_ << " queries" << std::endl; */
+      for (auto& entry : model_counts_) {
+        last_model_scale_snapshot_[entry.first] =
+            (float)(entry.second) / (float)(total_snapshot_queries_);
+        /* std::cout << entry.first << " -> " << last_model_scale_snapshot_[entry.first] << std::endl; */
+        entry.second = 0;
+      }
+      total_snapshot_queries_ = 0;
+    }
+
+    float arrival_curve_max_lambda = check_arrival_curve_exceeded(current_arrival_counts_,arrival_curve_max_counts);
+    if (arrival_curve_max_lambda > 0.0 && iter_number > 10) {
+      // First check if we need to add any replicas
+      bool replicas_added = check_add_replicas_max(model_throughputs_, last_model_scale_snapshot_,
+         model_num_replicas_, model_max_loads_, arrival_curve_max_lambda);
+      if (replicas_added) {
+        last_add_replica_timestamp = std::chrono::system_clock::now();
+        optimizer_running = false;  // Throw away the current optimizer run if it exists
+      }
+    } else {
+      // TODO: Should this be in the else statement or outside?
+      int secs_since_last_replica_add =
+          duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() -
+                                              last_add_replica_timestamp)
+              .count();
+      if (secs_since_last_replica_add >= reactive2_wait_time_secs_ && iter_number > 10) {
+        bool replicas_removed = check_remove_replicas(model_throughputs_, last_model_scale_snapshot_,
+           model_num_replicas_, model_max_loads_);
+        if (replicas_removed) {
+        }
+      }
+    }
+
+  auto iter_end = std::chrono::system_clock::now();
+  last_iter_time_ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+      iter_end - iter_start).count();
+  }
 }
 
 // can send just a map with float and count and keep it updated in pyx
@@ -95,12 +159,61 @@ void register_arrival(std::string model, int query_id) {
   }// Release arrival_time_lock
 }
 
-/*
-bool check_add_replicas_max(std::vector<std::pair<float, std::chrono::system_clock::time_point>>& prev_lambdas,
-    float arrival_curve_max_lambda){
-   return true;
+
+bool check_add_replicas_max(std::unordered_map<std::string, float> model_throughputs_,
+  std::unordered_map<std::string, float> last_model_scale_snapshot_,
+  std::unordered_map<std::string, int> model_num_replicas_,
+  std::unordered_map<std::string, float> model_max_loads_,
+  float arrival_curve_max_lambda){
+     float cur_lambda;
+  {
+    std::unique_lock<std::mutex> arrival_time_lock(mtx);
+    float arrival_times_window =
+        std::chrono::duration_cast<std::chrono::milliseconds>(
+            *(arrival_times_for_replica_add_.end() - 1) - *arrival_times_for_replica_add_.begin())
+            .count() / 1000.0;
+    if (arrival_times_for_replica_add_.size() < 100) {
+      return false;
+    }
+    cur_lambda = (float)(arrival_times_for_replica_add_.size()) / arrival_times_window;
+  }
+  prev_lambdas.emplace_back(cur_lambda, std::chrono::system_clock::now());
+
+  float max_lambda = arrival_curve_max_lambda;
+
+  if (max_lambda == -1.0) {
+    return false;
+  }
+
+  // Round up
+  max_lambda = std::ceil(max_lambda);
+  std::cout << "Max lambda for adding replicas: " << max_lambda << std::endl;
+  std::unordered_map<std::string, int> model_extra_replicas_needed;
+  bool additional_reps_needed = false;
+  for (auto& entry : model_throughputs_) {
+    float single_replica_scaled_throughput =
+        model_throughputs_[entry.first] / last_model_scale_snapshot_[entry.first];
+    float max_scaled_throughput =
+        std::round(single_replica_scaled_throughput * (float)(model_num_replicas_[entry.first]));
+    std::cout << "Model " << entry.first
+              << ": model_throughput=" << model_throughputs_[entry.first]
+              << " num_replicas=" << model_num_replicas_[entry.first]
+              << " scale_factor=" << last_model_scale_snapshot_[entry.first] << std::endl;
+    /* float k_hat_m = max_lambda / (single_replica_scaled_throughput * model_max_loads_[entry.first]); */
+    float k_hat_m = max_lambda / (single_replica_scaled_throughput * max_load_);
+    int extra_replicas_needed = int(std::ceil(k_hat_m)) - model_num_replicas_[entry.first];
+    std::cout << "Extra replicas needed " << entry.first << ": " << extra_replicas_needed << std::endl;
+    if (extra_replicas_needed <= 0) {
+      extra_replicas_needed = 0;
+    } else {
+      additional_reps_needed = true;
+    }
+    model_extra_replicas_needed[entry.first] = extra_replicas_needed;
+  }
+
+  return additional_reps_needed;
 }
-*/
+
 bool check_remove_replicas(std::unordered_map<std::string, float> model_throughputs_,
   std::unordered_map<std::string, float> last_model_scale_snapshot_,
   std::unordered_map<std::string, int> model_num_replicas_,
