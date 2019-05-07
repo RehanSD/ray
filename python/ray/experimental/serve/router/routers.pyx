@@ -17,6 +17,7 @@ cdef extern from "../../../src/ray/experimental/router/routers.h":
    int fib(int s)
    void run_monitor_thread()
    float check_arrival_curve_exceeded(unordered_map map)
+   void register_arrival(c_string model, int query_id)
 
 from collections import defaultdict
 from functools import total_ordering

@@ -94,12 +94,61 @@ void register_arrival(std::string model, int query_id) {
     }
   }// Release arrival_time_lock
 }
-/*bool check_add_replicas_max(std::vector<std::pair<float, std::chrono::system_clock::time_point>>& prev_lambdas,
+
+/*
+bool check_add_replicas_max(std::vector<std::pair<float, std::chrono::system_clock::time_point>>& prev_lambdas,
     float arrival_curve_max_lambda){
    return true;
 }
-
-bool check_remove_replicas(std::vector<std::pair<float,std::chrono::system_clock::time_point>>& prev_lambdas){
-   return true;
-}
 */
+bool check_remove_replicas(std::unordered_map<std::string, float> model_throughputs_,
+  std::unordered_map<std::string, float> last_model_scale_snapshot_,
+  std::unordered_map<std::string, int> model_num_replicas_,
+  std::unordered_map<std::string, float> model_max_loads_){
+
+  // Compute max lambda over max_lambda_window_
+  float max_lambda = -1.0;
+  for (auto lambda_entry = prev_lambdas.rbegin(); lambda_entry != prev_lambdas.rend(); ++lambda_entry) {
+    float time_delta = std::chrono::duration_cast<std::chrono::seconds>(
+                             std::chrono::system_clock::now() - lambda_entry->second)
+                             .count();
+    if (time_delta >= max_lambda_window_) {
+      break;
+    } else {
+      if (lambda_entry->first > max_lambda) {
+        max_lambda = lambda_entry->first;
+      }
+    }
+  }
+  if (max_lambda == -1.0) {
+    return false;
+  }
+
+  // Round up
+  max_lambda = std::ceil(max_lambda);
+  std::cout << "Max lambda for removing replicas: " << max_lambda << std::endl;
+
+  std::unordered_map<std::string, int> model_replicas_to_remove;
+  bool change_needed = false;
+  for (auto& entry : model_throughputs_) {
+    float single_replica_scaled_throughput =
+        model_throughputs_[entry.first] / last_model_scale_snapshot_[entry.first];
+    float max_scaled_throughput =
+        std::round(single_replica_scaled_throughput * (float)(model_num_replicas_[entry.first]));
+
+    float k_hat_m = max_lambda / (single_replica_scaled_throughput * model_max_loads_[entry.first]);
+    /* float k_hat_m = max_lambda / (single_replica_scaled_throughput * max_load_); */
+    int replicas_to_remove = model_num_replicas_[entry.first] - int(std::ceil(k_hat_m));
+    if (replicas_to_remove <= 0) {
+      replicas_to_remove = 0;
+    } else {
+      std::cout << "Replicas to remove " << entry.first << ": " << replicas_to_remove <<
+        ", k_hat_m " << k_hat_m << std::endl;
+      change_needed = true;
+
+    }
+    model_replicas_to_remove[entry.first] = replicas_to_remove;
+  }
+  return change_needed;
+}
+

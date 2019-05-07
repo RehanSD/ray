@@ -303,38 +303,7 @@ bool FineGrainedReactiveComponentNoOpt::check_add_replicas_max(
   }
   prev_lambdas.emplace_back(cur_lambda, std::chrono::system_clock::now());
 
-  /* // Compute max lambda over max_lambda_window_ */
-  /* #<{(| float max_lambda = -1.0; |)}># */
-  /* float max_lambda = cur_lambda; */
-  /* for (auto lambda_entry = prev_lambdas.rbegin(); lambda_entry != prev_lambdas.rend(); ++lambda_entry) { */
-  /*   float time_delta = std::chrono::duration_cast<std::chrono::seconds>( */
-  /*                            std::chrono::system_clock::now() - lambda_entry->second) */
-  /*                            .count(); */
-  /*   if (time_delta >= max_lambda_window_) { */
-  /*     break; */
-  /*   } else { */
-  /*     if (lambda_entry->first > max_lambda) { */
-  /*       max_lambda = lambda_entry->first; */
-  /*     } */
-  /*   } */
-  /* } */
-
   float max_lambda = arrival_curve_max_lambda;
-
-  /* if (arrival_curve_max_lambda > max_lambda) { */
-  /*   std::cout << "Provisioning for arrival curve max lambda: " << arrival_curve_max_lambda */
-  /*     << " over smoothed max lambda: " << max_lambda << std::endl; */
-  /*   max_lambda = arrival_curve_max_lambda; */
-  /* } else { */
-  /*   std::cout << "Provisioning for smoothed max lambda: " << max_lambda */
-  /*     << " over arrival curve max lambda: " << arrival_curve_max_lambda << std::endl; */
-  /* } */
-
-  /* if (arrival_curve_max_lambda > cur_lambda) { */
-  /*   prev_lambdas.emplace_back(arrival_curve_max_lambda, std::chrono::system_clock::now()); */
-  /* } else { */
-  // prev_lambdas.emplace_back(cur_lambda, std::chrono::system_clock::now());
-  // }
 
   if (max_lambda == -1.0) {
     return false;
@@ -414,7 +383,7 @@ bool FineGrainedReactiveComponentNoOpt::check_remove_replicas(
   }
   if (max_lambda == -1.0) {
     return false;
-  } 
+  }
 
   // Round up
   max_lambda = std::ceil(max_lambda);
@@ -434,7 +403,7 @@ bool FineGrainedReactiveComponentNoOpt::check_remove_replicas(
     if (replicas_to_remove <= 0) {
       replicas_to_remove = 0;
     } else {
-      std::cout << "Replicas to remove " << entry.first << ": " << replicas_to_remove << 
+      std::cout << "Replicas to remove " << entry.first << ": " << replicas_to_remove <<
         ", k_hat_m " << k_hat_m << std::endl;
       change_needed = true;
 
@@ -477,7 +446,10 @@ void FineGrainedReactiveComponentNoOpt::run_monitor_thread() {
   socket.connect("tcp://127.0.0.1:" + std::to_string(actions_port_));
   // system_clock::time_point last_arrival_rate_check;
   // std::this_thread::sleep_for(std::chrono::seconds(10));
-  std::vector<std::pair<float, std::chrono::system_clock::time_point>> prev_lambdas;
+
+  // moved to .h by meadowlark
+  //std::vector<std::pair<float, std::chrono::system_clock::time_point>> prev_lambdas;
+
   /* float prev_lambda = -1; */
   /* auto prev_lambda_timestamp = std::chrono::system_clock::now(); */
   // bool lambda_is_initialized = false;
