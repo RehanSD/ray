@@ -8,24 +8,12 @@ def test_fib():
 
 def test_start():
 
-    value = reactive_controller.start()
+    value = reactive_controller.c_start()
 
-    assert value == "start"
+    assert value.decode("utf-8")  == "start"
 
 def test_stop():
 
-    value = reactive_controller.stop()
+    value = reactive_controller.c_stop()
 
-    assert value == "stop"
-
-def test_get_replica():
-
-    value = reactive_controller.get_replica()
-
-    assert value == "get_replica"
-
-def test_complete_query():
-
-    value = reactive_controller.complete_query()
-
-    assert value == "complete_query"
+    assert value.decode("utf-8")  == "stop"

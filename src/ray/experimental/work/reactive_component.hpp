@@ -50,7 +50,6 @@ class ReactiveController {
   // bool start_optimizer(zmq::socket_t& socket, int run_number);
   // bool apply_optimizer_config(zmq::socket_t& socket, float cur_lambda);
   void run_monitor_thread();
-  long long compute_p99_latency(std::vector<std::pair<long long, long long>> e2e_lats);
 
   static constexpr float slo_perc_upper_bound_ = 0.9;
   static constexpr float slo_perc_lower_bound_ = 0.4;
