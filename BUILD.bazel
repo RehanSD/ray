@@ -64,16 +64,16 @@ cc_library(
     name = "janus_lib",
     srcs = glob(
         [
-            "src/ray/experimental/janus/*.cc",
+            "src/ray/experimental/router/*.cc",
         ],
         exclude = [
-            "src/ray/experimental/janus/mock_gcs_client.cc",
-            "src/ray/experimental/janus/monitor_main.cc",
-            "src/ray/experimental/janus/*_test.cc",
+            "src/ray/experimental/router/mock_gcs_client.cc",
+            "src/ray/experimental/router/monitor_main.cc",
+            "src/ray/experimental/router/*_test.cc",
         ],
     ),
     hdrs = glob([
-        "src/ray/experimental/janus/*.h",
+        "src/ray/experimental/router/*.h",
     ]),
     copts = COPTS
 )
@@ -392,10 +392,10 @@ pyx_library(
 pyx_library(
     name = "_janus",
     srcs = glob([
-        "python/ray/experimental/serve/janus/__init__.py",
-        "python/ray/experimental/serve/janus/reactive_controller.pyx",
-        "python/ray/experimental/serve/janus/includes/*.pxd",
-        "python/ray/experimental/serve/janus/includes/*.pxi",
+        "python/ray/experimental/serve/router/__init__.py",
+        "python/ray/experimental/serve/router/routers.pyx",
+        "python/ray/experimental/serve/router/includes/*.pxd",
+        "python/ray/experimental/serve/router/includes/*.pxi",
     ]),
     deps = ["//:janus_lib"]
 )
@@ -576,7 +576,7 @@ genrule(
     name = "ray_pkg",
     srcs = [
         "python/ray/_raylet.so",
-        "python/ray/experimental/serve/janus/reactive_controller.so",
+        "python/ray/experimental/serve/router/routers.so",
         "//:python_sources",
         "//:python_gcs_fbs",
         "//:python_node_manager_fbs",
@@ -592,8 +592,8 @@ genrule(
         set -x &&
         mkdir -p python/ray &&
         cp $(location python/ray/_raylet.so) python/ray &&
-        mkdir -p python/ray/experimental/serve/janus &&
-        cp $(location python/ray/experimental/serve/janus/reactive_controller.so) python/ray/experimental/serve/janus &&
+        mkdir -p python/ray/experimental/serve/router &&
+        cp $(location python/ray/experimental/serve/router/routers.so) python/ray/experimental/serve/router &&
         mkdir -p python/ray/core/src/ray/thirdparty/redis/src/ &&
         cp $(location //:redis-server) python/ray/core/src/ray/thirdparty/redis/src/ &&
         cp $(location //:redis-cli) python/ray/core/src/ray/thirdparty/redis/src/ &&
