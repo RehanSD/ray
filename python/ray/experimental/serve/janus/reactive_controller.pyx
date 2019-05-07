@@ -39,21 +39,38 @@ cdef class ReactiveController:
        self.model_throughput_ = mt_
        self.model_scale_factors_ = msf_
 
-   cpdef get_num(self, float n):
+   cpdef float get_arrival_curve_max_count(self, float n):
        return self.arrival_curve_max_counts_[n]
 
+   cpdef float get_replicas_for_model(self, float n):
+       return self.replicas_per_model_[n]
 
-
+   cpdef float get_model_throughput(self, float n):
+       return self.model_throughput_[n]
 
    # start - starts monitoring thread
+   cpdef void start(self):
+       print("started")
+
+   # stop - stop monitoring thread
+   cpdef void stop(self):
+       print("stopped")
 
    # monitor thread - constantly checks if
    #      arrival_curve_exceeded
-   #      need_to_add_replicas
-   #      need_to_reduce_replicas
+   cdef void arrival_curve_exceeded(self):
+       print("checked curve")
 
-   # stop -stop monitoring thread
+   #      need_to_add_replicas
+   cdef void check_need_to_add_replicas(self):
+       print("checked need to add")
+
+   #      need_to_reduce_replicas
+   cdef void check_need_to_reduce_replicas(self):
+       print("checked need to reduce")
+
 
    # request for actor (get_replica) - allows for count of arrival times and serves model
-   #
+   cpdef void register_arrival(self):
+       print("register_arrival")
 
