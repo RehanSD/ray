@@ -300,7 +300,7 @@ class DeadlineAwareRouter:
         """
         self.running_queries[batch_oid] = actor_handle
 
-cdef class ReactiveController:
+cdef class JanusRouter:
 
    cdef unordered_map[float, float] arrival_curve_max_counts_
    cdef unordered_map[float, int] replicas_per_model_
