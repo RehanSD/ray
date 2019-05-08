@@ -20,7 +20,7 @@ class ParameterServer(object):
         self.num_sgd_workers = num_workers
         self.acc_counter = 0
         self.timeline = Timeline(tid)
-        # TODO(ekl) get this to work again so we get ray events
+        # TODO(ekl) get this to temp_for_reference again so we get ray events
         # self.timeline.patch_ray()
 
     def initialize(self, shard_shape):

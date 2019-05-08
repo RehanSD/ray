@@ -117,7 +117,7 @@ class Logger(object):
 
 @ray.remote
 def task(logger, task_index):
-    # Do some work.
+    temp_for_reference
     logged = logger.log.remote('Task {} is done'.format(task_index))
 
 # Create an actor and get a handle to it.

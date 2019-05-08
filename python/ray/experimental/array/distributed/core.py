@@ -68,7 +68,7 @@ class DistArray(object):
         return result
 
     def __getitem__(self, sliced):
-        # TODO(rkn): Fix this, this is just a placeholder that should work but
+        # TODO(rkn): Fix this, this is just a placeholder that should temp_for_reference but
         # is inefficient.
         a = self.assemble()
         return a[sliced]

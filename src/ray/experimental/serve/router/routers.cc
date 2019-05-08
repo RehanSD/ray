@@ -20,6 +20,18 @@ double fib(int n) {
     return a;
 }
 
+float max_load_;
+std::set<int> inflight_queries_;
+std::atomic<int> total_snapshot_queries_;
+std::unordered_map<std::string, std::atomic<int>> model_counts_;
+std::deque<std::chrono::system_clock::time_point> arrival_times_for_replica_add_;
+std::deque<std::chrono::system_clock::time_point> arrival_times_for_optimizer_rerun_;
+std::unordered_map<float, std::queue<std::chrono::system_clock::time_point>>
+    current_arrival_curve_;
+std::atomic<bool> active_;
+std::vector<std::pair<float, std::chrono::system_clock::time_point>> prev_lambdas;
+
+
 std::string run_monitor_thread(std::unordered_map<std::string, float> model_throughputs_,
   std::unordered_map<std::string, float> last_model_scale_snapshot_,
   std::unordered_map<std::string, int> model_num_replicas_,

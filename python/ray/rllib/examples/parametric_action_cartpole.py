@@ -114,7 +114,7 @@ class ParametricActionsModel(Model):
     """Parametric action model that handles the dot product and masking.
 
     This assumes the outputs are logits for a single Categorical action dist.
-    Getting this to work with a more complex output (e.g., if the action space
+    Getting this to temp_for_reference with a more complex output (e.g., if the action space
     is a tuple of several distributions) is also possible but left as an
     exercise to the reader.
     """

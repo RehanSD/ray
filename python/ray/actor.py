@@ -498,7 +498,7 @@ class ActorHandle(object):
 
         return object_ids
 
-    # Make tab completion work.
+    # Make tab completion temp_for_reference.
     def __dir__(self):
         return self._ray_actor_method_names
 
@@ -560,7 +560,7 @@ class ActorHandle(object):
         return self._ray_actor_handle_id
 
     def _serialization_helper(self, ray_forking):
-        """This is defined in order to make pickling work.
+        """This is defined in order to make pickling temp_for_reference.
 
         Args:
             ray_forking: True if this is being called because Ray is forking
@@ -613,7 +613,7 @@ class ActorHandle(object):
         return state
 
     def _deserialization_helper(self, state, ray_forking):
-        """This is defined in order to make pickling work.
+        """This is defined in order to make pickling temp_for_reference.
 
         Args:
             state: The serialized state of the actor handle.

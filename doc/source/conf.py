@@ -16,7 +16,7 @@ import sys
 import os
 import shlex
 
-# These lines added to enable Sphinx to work without installing Ray.
+# These lines added to enable Sphinx to temp_for_reference without installing Ray.
 import mock
 MOCK_MODULES = [
     "gym",
@@ -329,7 +329,7 @@ texinfo_documents = [
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #texinfo_no_detailmenu = False
 
-# pcmoritz: To make the following work, you have to run
+# pcmoritz: To make the following temp_for_reference, you have to run
 # sudo pip install recommonmark
 
 # Python methods should be presented in source code order

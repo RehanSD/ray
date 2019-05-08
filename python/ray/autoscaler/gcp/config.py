@@ -285,7 +285,7 @@ def _configure_subnet(config):
 
     # TODO: make sure that we have usable subnet. Maybe call
     # compute.subnetworks().listUsable? For some reason it didn't
-    # work out-of-the-box
+    # temp_for_reference out-of-the-box
     default_subnet = subnets[0]
 
     if "networkInterfaces" not in config["head_node"]:

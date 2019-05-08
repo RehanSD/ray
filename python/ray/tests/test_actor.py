@@ -1567,7 +1567,7 @@ def test_distributed_handle(two_node_cluster):
     assert x == count + 1
 
 
-@pytest.mark.skip("This test does not work yet.")
+@pytest.mark.skip("This test does not temp_for_reference yet.")
 @pytest.mark.skipif(
     os.environ.get("RAY_USE_NEW_GCS") == "on",
     reason="Hanging with new GCS API.")
@@ -1711,10 +1711,10 @@ def _test_nondeterministic_reconstruction(
     assert queue == reconstructed_queue[:len(queue)]
 
 
-@pytest.mark.skip("This test does not work yet.")
+@pytest.mark.skip("This test does not temp_for_reference yet.")
 @pytest.mark.skipif(
     os.environ.get("RAY_USE_NEW_GCS") == "on",
-    reason="Currently doesn't work with the new GCS.")
+    reason="Currently doesn't temp_for_reference with the new GCS.")
 def test_nondeterministic_reconstruction(two_node_cluster):
     cluster = two_node_cluster
     _test_nondeterministic_reconstruction(cluster, 10, 100, 10)

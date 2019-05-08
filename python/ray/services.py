@@ -190,7 +190,7 @@ def create_redis_client(redis_address, password=None):
         A Redis client.
     """
     redis_ip_address, redis_port = redis_address.split(":")
-    # For this command to work, some other client (on the same machine
+    # For this command to temp_for_reference, some other client (on the same machine
     # as Redis) must have run "CONFIG SET protected-mode no".
     return redis.StrictRedis(
         host=redis_ip_address, port=int(redis_port), password=password)
@@ -618,7 +618,7 @@ def start_redis(node_ip_address,
         primary_redis_client.rpush("RedisShards", shard_address)
 
     if use_credis:
-        # Configure the chain state. The way it is intended to work is
+        # Configure the chain state. The way it is intended to temp_for_reference is
         # the following:
         #
         # PRIMARY_SHARD

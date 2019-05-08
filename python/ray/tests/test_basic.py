@@ -1306,10 +1306,10 @@ def test_illegal_api_calls(shutdown_only):
         ray.get(3)
 
 
-# TODO(hchen): This test currently doesn't work in Python 2. This is likely
+# TODO(hchen): This test currently doesn't temp_for_reference in Python 2. This is likely
 # because plasma client isn't thread-safe. This needs to be fixed from the
 # Arrow side. See #4107 for relevant discussions.
-@pytest.mark.skipif(six.PY2, reason="Doesn't work in Python 2.")
+@pytest.mark.skipif(six.PY2, reason="Doesn't temp_for_reference in Python 2.")
 def test_multithreading(shutdown_only):
     # This test requires at least 2 CPUs to finish since the worker does not
     # release resources when joining the threads.
@@ -1607,7 +1607,7 @@ def test_local_mode(shutdown_only):
     test_array[0] = -1
     assert np.alltrue(test_array == test_actor.get_array.remote())
 
-    # Check that actor handles work in Python mode.
+    # Check that actor handles temp_for_reference in Python mode.
 
     @ray.remote
     def use_actor_handle(handle):

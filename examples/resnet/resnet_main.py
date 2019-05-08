@@ -15,7 +15,7 @@ import tensorflow as tf
 import cifar_input
 import resnet_model
 
-# Tensorflow must be at least version 1.2.0 for the example to work.
+# Tensorflow must be at least version 1.2.0 for the example to temp_for_reference.
 tf_major = int(tf.__version__.split(".")[0])
 tf_minor = int(tf.__version__.split(".")[1])
 if (tf_major < 1) or (tf_major == 1 and tf_minor < 2):

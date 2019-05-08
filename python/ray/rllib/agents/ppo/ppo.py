@@ -165,7 +165,7 @@ class PPOAgent(Agent):
             logger.info(
                 "In multi-agent mode, policies will be optimized sequentially "
                 "by the multi-GPU optimizer. Consider setting "
-                "simple_optimizer=True if this doesn't work for you.")
+                "simple_optimizer=True if this doesn't temp_for_reference for you.")
         if not self.config["vf_share_layers"]:
             logger.warning(
                 "FYI: By default, the value function will not share layers "

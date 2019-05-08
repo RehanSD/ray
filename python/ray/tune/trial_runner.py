@@ -182,7 +182,7 @@ class TrialRunner(object):
         logger.warning("".join([
             "Attempting to resume experiment from {}. ".format(
                 metadata_checkpoint_dir), "This feature is experimental, "
-            "and may not work with all search algorithms. ",
+            "and may not temp_for_reference with all search algorithms. ",
             "This will ignore any new changes to the specification."
         ]))
 

@@ -101,7 +101,7 @@ class LocalSyncParallelOptimizer(object):
                 avg[i] = (clipped[i], var)
 
         # gather update ops for any batch norm layers. TODO(ekl) here we will
-        # use all the ops found which won't work for DQN / DDPG, but those
+        # use all the ops found which won't temp_for_reference for DQN / DDPG, but those
         # aren't supported with multi-gpu right now anyways.
         self._update_ops = tf.get_collection(
             tf.GraphKeys.UPDATE_OPS, scope=tf.get_variable_scope().name)

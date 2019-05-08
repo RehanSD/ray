@@ -170,7 +170,7 @@ def qr(a):
     m, n = a.shape[0], a.shape[1]
     k = min(m, n)
 
-    # we will store our scratch work in a_work
+    # we will store our scratch temp_for_reference in a_work
     a_work = core.DistArray(a.shape, np.copy(a.objectids))
 
     result_dtype = np.linalg.qr(ray.get(a.objectids[0, 0]))[0].dtype.name

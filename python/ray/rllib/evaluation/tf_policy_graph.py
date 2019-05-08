@@ -236,7 +236,7 @@ class TFPolicyGraph(PolicyGraph):
     def copy(self, existing_inputs):
         """Creates a copy of self using existing input placeholders.
 
-        Optional, only required to work with the multi-GPU optimizer."""
+        Optional, only required to temp_for_reference with the multi-GPU optimizer."""
         raise NotImplementedError
 
     @DeveloperAPI

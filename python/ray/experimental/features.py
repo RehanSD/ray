@@ -53,7 +53,7 @@ def flush_task_and_object_metadata_unsafe():
     This removes all of the object and task metadata. This can be used to try
     to address out-of-memory errors caused by the accumulation of metadata in
     Redis. However, after running this command, fault tolerance will most
-    likely not work.
+    likely not temp_for_reference.
     """
     ray.worker.global_worker.check_connected()
 
@@ -161,7 +161,7 @@ def flush_finished_tasks_unsafe():
     This removes all of the metadata for finished tasks. This can be used to
     try to address out-of-memory errors caused by the accumulation of metadata
     in Redis. However, after running this command, fault tolerance will most
-    likely not work.
+    likely not temp_for_reference.
     """
     ray.worker.global_worker.check_connected()
 
@@ -178,7 +178,7 @@ def flush_evicted_objects_unsafe():
     This removes all of the metadata for objects that have been evicted. This
     can be used to try to address out-of-memory errors caused by the
     accumulation of metadata in Redis. However, after running this command,
-    fault tolerance will most likely not work.
+    fault tolerance will most likely not temp_for_reference.
     """
     ray.worker.global_worker.check_connected()
 

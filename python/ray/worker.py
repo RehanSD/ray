@@ -1022,7 +1022,7 @@ def get_gpu_ids():
         A list of GPU IDs.
     """
     if _mode() == LOCAL_MODE:
-        raise Exception("ray.get_gpu_ids() currently does not work in PYTHON "
+        raise Exception("ray.get_gpu_ids() currently does not temp_for_reference in PYTHON "
                         "MODE.")
 
     all_resource_ids = global_worker.raylet_client.resource_ids()
@@ -1050,7 +1050,7 @@ def get_resource_ids():
     """
     if _mode() == LOCAL_MODE:
         raise Exception(
-            "ray.get_resource_ids() currently does not work in PYTHON "
+            "ray.get_resource_ids() currently does not temp_for_reference in PYTHON "
             "MODE.")
 
     return global_worker.raylet_client.resource_ids()
@@ -1078,7 +1078,7 @@ def get_webui_url():
         The URL of the web UI as a string.
     """
     if _mode() == LOCAL_MODE:
-        raise Exception("ray.get_webui_url() currently does not work in "
+        raise Exception("ray.get_webui_url() currently does not temp_for_reference in "
                         "PYTHON MODE.")
     return _webui_url_helper(global_worker.redis_client)
 
@@ -1199,7 +1199,7 @@ def get_address_info_from_redis_helper(redis_address,
                                        node_ip_address,
                                        redis_password=None):
     redis_ip_address, redis_port = redis_address.split(":")
-    # For this command to work, some other client (on the same machine as
+    # For this command to temp_for_reference, some other client (on the same machine as
     # Redis) must have run "CONFIG SET protected-mode no".
     redis_client = redis.StrictRedis(
         host=redis_ip_address, port=int(redis_port), password=redis_password)

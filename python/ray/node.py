@@ -454,7 +454,7 @@ class Node(object):
         Args:
             process_type: The type of the process to kill.
             allow_graceful (bool): Send a SIGTERM first and give the process
-                time to exit gracefully. If that doesn't work, then use
+                time to exit gracefully. If that doesn't temp_for_reference, then use
                 SIGKILL. We usually want to do this outside of tests.
             check_alive (bool): If true, then we expect the process to be alive
                 and will raise an exception if the process is already dead.

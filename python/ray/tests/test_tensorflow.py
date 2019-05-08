@@ -182,7 +182,7 @@ def test_networks_independent(ray_start_regular):
     net2 = NetActor()
 
     # Make sure the two networks have different weights. TODO(rkn): Note
-    # that equality comparisons of numpy arrays normally does not work.
+    # that equality comparisons of numpy arrays normally does not temp_for_reference.
     # This only works because at the moment they have size 1.
     weights1 = net1.get_weights()
     weights2 = net2.get_weights()
