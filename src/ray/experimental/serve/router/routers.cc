@@ -42,7 +42,6 @@ std::string run_monitor_thread(std::unordered_map<std::string, float> model_thro
 
   // bool lambda_is_initialized = false;
   int iter_sleep_time_ms = 1000;
-
   auto last_add_replica_timestamp = std::chrono::system_clock::now();
   bool optimizer_running = false;
   int num_optimizer_runs = 0;
