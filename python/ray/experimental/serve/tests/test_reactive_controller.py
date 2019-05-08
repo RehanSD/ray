@@ -1,3 +1,4 @@
+import pyximport; pyximport.install()
 from ray.experimental.serve.router import routers
 
 # checks that routers.pyx is linking properly to the C++ code
