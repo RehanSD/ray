@@ -31,41 +31,8 @@ std::unordered_map<float, std::queue<std::chrono::system_clock::time_point>>
 std::atomic<bool> active_;
 std::vector<std::pair<float, std::chrono::system_clock::time_point>> prev_lambdas;
 
-FineGrainedReactiveComponentNoOpt::FineGrainedReactiveComponentNoOpt(long long slo_micros, bool take_reactive_action,
-    std::map<std::string, std::tuple<int, float, float, float>> model_info, float max_load,
-    std::unordered_map<float, int> arrival_curve_max_counts)
-    : actions_port_(actions_port),
-      active_(true),
-      total_snapshot_queries_(0),
-      metrics_(metrics),
-      take_reactive_action_(take_reactive_action),
-      slo_micros_(slo_micros),
-      max_load_(max_load),
-      arrival_curve_max_counts_(arrival_curve_max_counts) {
-  metrics_->set_max_collection_winodw(p99_collection_window_);
+void init(){
 
-  for (auto model : model_info) {
-    model_counts_.emplace(std::piecewise_construct, std::forward_as_tuple(model.first),
-                          std::forward_as_tuple(0));
-  }
-  for (auto entry : model_info) {
-    model_num_replicas_.emplace(entry.first, std::get<0>(entry.second));
-    float scale = std::get<1>(entry.second);
-    last_model_scale_snapshot_.emplace(entry.first, scale);
-    /* std::cout << entry.first << " -> " << last_model_scale_snapshot_.at(entry.first) << "   " */
-    /*           << scale << std::endl; */
-    model_throughputs_.emplace(entry.first, std::get<2>(entry.second));
-    model_max_loads_.emplace(entry.first, std::get<3>(entry.second));
-    std::cout << "Max load: " << entry.first << " -> " << model_max_loads_[entry.first] << std::endl;
-  }
-
-  std::cout << "Arrival curve: ";
-  for (auto entry: arrival_curve_max_counts_) {
-    current_arrival_curve_.emplace(entry.first, std::queue<std::chrono::system_clock::time_point>{});
-
-    std::cout << entry.first << ":" << entry.second << ", ";
-  }
-  std::cout << std::endl;
 }
 
 std::string run_monitor_thread(std::unordered_map<std::string, float> model_throughputs_,

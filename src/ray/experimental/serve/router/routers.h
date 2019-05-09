@@ -17,6 +17,7 @@ static constexpr int arrival_times_optimizer_rerun_window_ = 60;  // in seconds
 static constexpr int max_lambda_window_ = 30;  // in seconds
 static constexpr int reactive2_wait_time_secs_ = 15;      // in seconds
 
+// make sure all of these get declared
 extern float max_load_;
 extern std::set<int> inflight_queries_;
 extern std::atomic<int> total_snapshot_queries_;
@@ -50,4 +51,5 @@ bool check_add_replicas_max(std::unordered_map<std::string, float> model_through
   std::unordered_map<std::string, int> model_num_replicas_,
   std::unordered_map<std::string, float> model_max_loads_,
    float arrival_curve_max_lambda);
+
 

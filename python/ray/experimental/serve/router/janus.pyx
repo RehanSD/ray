@@ -45,7 +45,7 @@ cpdef init(self, router_name, model_info):
         model_throughputs[model_name] = model_info[model_name][2]
         arrival_curve_max_counts[model_name] = model_info[model_name][3]
 
-   #call init for routers.cc
+   #call init for routers.cc, init declares vars and populates them
 
 # start - starts monitoring thread
 cpdef void start(self):
