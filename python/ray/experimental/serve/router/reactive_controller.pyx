@@ -16,7 +16,7 @@ from libcpp.queue cimport queue as c_queue
 #from libcpp cimport int as c_int
 
 
-cdef extern from "../../../src/ray/experimental/serve/router/routers.h":
+cdef extern from "../../../src/ray/experimental/serve/janus/reactive_controller.h":
    int fib(int s)
    void register_arrival(c_string model, int query_id)
    void run_monitor_thread(unordered_map model_throughputs_, unordered_map last_model_scale_snapshot_,

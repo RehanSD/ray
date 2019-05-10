@@ -1,9 +1,9 @@
 import pyximport; pyximport.install()
-from ray.experimental.serve.router import janus
+from ray.experimental.serve.router import reactive_controller
 
-# checks that janus.pyx is linking properly to the C++ code
+# checks that reactive_controller.pyx is linking properly to the C++ code
 def test_fib():
 
-    value = janus.c_fib(6)
+    value = reactive_controller.c_fib(6)
 
     assert value == 8

@@ -8,7 +8,7 @@ from ray.experimental.serve import RayServeMixin, batched_input
 
 @ray.remote
 class Counter(RayServeMixin):
-    """Return the query id. Used for testing router."""
+    """Return the query id. Used for testing janus."""
 
     def __init__(self):
         self.counter = 0

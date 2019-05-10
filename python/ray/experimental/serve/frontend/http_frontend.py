@@ -12,7 +12,7 @@ import ray
 
 
 def unwrap(future):
-    """Unwrap the result from ray.experimental.server router.
+    """Unwrap the result from ray.experimental.server janus.
     Router returns a list of object ids when you call them.
     """
 

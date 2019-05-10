@@ -7,14 +7,14 @@ import ray
 
 
 def start_router(router_class, router_name):
-    """Wrapper for starting a router and register it.
+    """Wrapper for starting a janus and register it.
 
     Args:
-        router_class: The router class to instantiate.
-        router_name: The name to give to the router.
+        router_class: The janus class to instantiate.
+        router_name: The name to give to the janus.
 
     Returns:
-        A handle to newly started router actor.
+        A handle to newly started janus actor.
     """
     handle = router_class.remote(router_name)
     ray.experimental.register_actor(router_name, handle)

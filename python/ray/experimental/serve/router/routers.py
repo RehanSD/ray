@@ -11,8 +11,8 @@ from ray.experimental.serve.object_id import get_new_oid
 from ray.experimental.serve.utils.priority_queue import PriorityQueue
 
 ACTOR_NOT_REGISTERED_MSG: Callable = (
-    lambda name: ("Actor {} is not registered with this router. Please use "
-                  "'router.register_actor.remote(...)' "
+    lambda name: ("Actor {} is not registered with this janus. Please use "
+                  "'janus.register_actor.remote(...)' "
                   "to register it.").format(name))
 
 
@@ -42,7 +42,7 @@ class SingleQuery:
 
 @ray.remote
 class DeadlineAwareRouter:
-    """DeadlineAwareRouter is a router that is aware of deadlines.
+    """DeadlineAwareRouter is a janus that is aware of deadlines.
 
     It takes into consideration the deadline attached to each query. It will
     reorder incoming query based on their deadlines.
@@ -65,7 +65,7 @@ class DeadlineAwareRouter:
         self.name = router_name
 
     def start(self):
-        """Kick off the router loop"""
+        """Kick off the janus loop"""
 
         # Note: This is meant for hiding the complexity for a user
         #       facing method.
@@ -117,7 +117,7 @@ class DeadlineAwareRouter:
                 del self.actor_handles[actor_name][-1]
 
     def call(self, actor_name, data, deadline_s):
-        """Enqueue a request to one of the actor managed by this router.
+        """Enqueue a request to one of the actor managed by this janus.
 
         Returns:
             List[ray.ObjectID] with length 1, the object ID wrapped inside is
@@ -133,7 +133,7 @@ class DeadlineAwareRouter:
         return [result_object_id]
 
     def loop(self):
-        """Main loop for router. It will does the following things:
+        """Main loop for janus. It will does the following things:
 
         1. Check which running actors finished.
         2. Iterate over free actors and request queues, dispatch requests batch
