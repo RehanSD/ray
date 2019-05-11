@@ -22,30 +22,32 @@ cdef extern from "../../../src/ray/experimental/serve/janus/reactive_controller.
    void run_monitor_thread(unordered_map model_throughputs_, unordered_map last_model_scale_snapshot_,
     unordered_map model_num_replicas_, unordered_map model_max_loads_, unordered_map current_arrival_counts_,
     unordered_map arrival_curve_max_counts)
+   void reactive_controller_init (c_vector[int] replicas_per_model, c_vector[float] model_scale_factors,
+    c_vector[float] model_throughputs, c_vector[float] arrival_curve_max_counts)
 
 def c_fib(int n):
    return fib(n)
 
+def init(self, router_name, dict model_info):
 
-# init with
-# arrival_max_counts_per_model
-# num_replicas_per_model
-# model_throughputs
-# model_scale_factors
-cpdef init(self, router_name, model_info):
-
-   arrival_curve_max_counts: Dict[c_string, c_float] = {}
-   replicas_per_model: Dict[c_string, c_int] = {}
-   model_throughputs: Dict[c_string, c_float] = {}
-   model_scale_factors: Dict[c_string, c_float] = {}
+   cdef c_vector[int] replicas_per_model = []
+   cdef c_vector[float] model_scale_factors = []
+   cdef c_vector[float] model_throughputs = []
+   cdef c_vector[float] arrival_curve_max_counts = []
+   cdef c_vector[c_string] model_names = []
+   cdef c_string c_model_name
+   cdef int index = 0
 
    for model_name in model_info:
-        replicas_per_model[model_name] = model_info[model_name][0]
-        model_scale_factors[model_name] = model_info[model_name][1]
-        model_throughputs[model_name] = model_info[model_name][2]
-        arrival_curve_max_counts[model_name] = model_info[model_name][3]
+        c_model_name = model_name.encode('UTF-8')
+        model_names[index] = c_model_name
+        index = index + 1
+        replicas_per_model[model_name].emplace(model_info[model_name][0])
+        model_scale_factors[model_name].emplace(model_info[model_name][1])
+        model_throughputs[model_name].emplace(model_info[model_name][2])
+        arrival_curve_max_counts[model_name].emplace(model_info[model_name][3])
 
-   #call init for routers.cc, init declares vars and populates them
+   reactive_controller_init(replicas_per_model, model_scale_factors, model_throughputs, arrival_curve_max_counts)
 
 # start - starts monitoring thread
 cpdef void start(self):
@@ -54,19 +56,6 @@ cpdef void start(self):
 # stop - stop monitoring thread
 cpdef void stop(self):
    print("stopped")
-
-# monitor thread - constantly checks if
-#      arrival_curve_exceeded
-cdef void arrival_curve_exceeded(self):
-   print("checked curve")
-
-#      need_to_add_replicas
-cdef void check_need_to_add_replicas(self):
-   print("checked need to add")
-
-#      need_to_reduce_replicas
-cdef void check_need_to_reduce_replicas(self):
-   print("checked need to reduce")
 
 # request for actor (get_replica) - allows for count of arrival times and serves model
 cpdef void submit_arrival(self, model: str, query_id: int):

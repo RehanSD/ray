@@ -19,6 +19,7 @@ static constexpr int reactive2_wait_time_secs_ = 15;      // in seconds
 
 // make sure all of these get declared
 extern float max_load_;
+extern bool was_init;
 extern std::set<int> inflight_queries_;
 extern std::atomic<int> total_snapshot_queries_;
 extern std::unordered_map<std::string, std::atomic<int>> model_counts_;
@@ -51,5 +52,8 @@ bool check_add_replicas_max(std::unordered_map<std::string, float> model_through
   std::unordered_map<std::string, int> model_num_replicas_,
   std::unordered_map<std::string, float> model_max_loads_,
    float arrival_curve_max_lambda);
-
+void reactive_controller_init(std::vector<int> model_num_replicas,
+    std::vector<float> last_model_scale_snapshot,
+    std::vector<float> model_throughputs,
+    std::vector<float> arrival_curve_max_counts);
 

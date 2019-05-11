@@ -8,7 +8,6 @@
 #include <unordered_map>
 #include <mutex>
 
-std::mutex mtx;
 using namespace std;
 
 double fib(int n) {
@@ -21,6 +20,7 @@ double fib(int n) {
 }
 
 float max_load_;
+std::mutex mtx;
 std::set<int> inflight_queries_;
 std::atomic<int> total_snapshot_queries_;
 std::unordered_map<std::string, std::atomic<int>> model_counts_;
@@ -31,8 +31,24 @@ std::unordered_map<float, std::queue<std::chrono::system_clock::time_point>>
 std::atomic<bool> active_;
 std::vector<std::pair<float, std::chrono::system_clock::time_point>> prev_lambdas;
 
-void init(){
+bool was_init = false;
+std::vector<int> model_num_replicas_;
+std::vector<float> last_model_scale_snapshot_;
+std::vector<float> model_throughputs_;
+std::vector<float> arrival_curve_max_counts_;
 
+void reactive_controller_init(std::vector<int> model_num_replicas,
+    std::vector<float> last_model_scale_snapshot,
+    std::vector<float> model_throughputs,
+    std::vector<float> arrival_curve_max_counts){
+   std::cout << "hello from init!";
+   if(!was_init){
+       model_num_replicas_ = model_num_replicas;
+       last_model_scale_snapshot_ = last_model_scale_snapshot;
+       model_throughputs_ = model_throughputs;
+       arrival_curve_max_counts_ = arrival_curve_max_counts;
+       was_init=true;
+   }
 }
 
 std::string run_monitor_thread(std::unordered_map<std::string, float> model_throughputs_,
