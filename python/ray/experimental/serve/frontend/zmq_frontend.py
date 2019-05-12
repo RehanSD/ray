@@ -63,6 +63,7 @@ class ZMQFrontendActor:
                     self.router.call.remote(actor_name, inp, deadline)
                 )
                 result = ray.get(result_future)
+                ray.internal.free(result_future)
                 objid_sock.send_json({"success": True, "actor": actor_name, "result": result})
             except Exception as e:
                 objid_sock.send_json({"success": False, "actor": actor_name, "result": str(e)})
