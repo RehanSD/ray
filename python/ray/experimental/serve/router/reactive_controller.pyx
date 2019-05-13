@@ -19,9 +19,7 @@ from libcpp.queue cimport queue as c_queue
 cdef extern from "../../../src/ray/experimental/serve/janus/reactive_controller.h":
    int fib(int s)
    void register_arrival(c_string model, int query_id)
-   void run_monitor_thread(unordered_map model_throughputs_, unordered_map last_model_scale_snapshot_,
-    unordered_map model_num_replicas_, unordered_map model_max_loads_, unordered_map current_arrival_counts_,
-    unordered_map arrival_curve_max_counts)
+   void run_monitor_thread()
    void reactive_controller_init (c_vector[int] replicas_per_model, c_vector[float] model_scale_factors,
     c_vector[float] model_throughputs, c_vector[float] arrival_curve_max_counts)
 
@@ -51,6 +49,7 @@ def init(self, router_name, dict model_info):
 
 # start - starts monitoring thread
 cpdef void start(self):
+   run_monitor_thread()
    print("started")
 
 # stop - stop monitoring thread

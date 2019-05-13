@@ -51,13 +51,9 @@ void reactive_controller_init(std::vector<int> model_num_replicas,
    }
 }
 
-std::string run_monitor_thread(std::unordered_map<std::string, float> model_throughputs_,
-  std::unordered_map<std::string, float> last_model_scale_snapshot_,
-  std::unordered_map<std::string, int> model_num_replicas_,
-  std::unordered_map<std::string, float> model_max_loads_,
-  std::unordered_map<float, float> current_arrival_counts_,
-  std::unordered_map<float, int> arrival_curve_max_counts){
-     int iter_number = 0;
+std::string run_monitor_thread(){
+
+  int iter_number = 0;
 
   // bool lambda_is_initialized = false;
   int iter_sleep_time_ms = 1000;
@@ -79,12 +75,14 @@ std::string run_monitor_thread(std::unordered_map<std::string, float> model_thro
     auto iter_start = std::chrono::system_clock::now();
 
     if (total_snapshot_queries_ > 5000) {
+    int i = 0;
       /* std::cout << "Updating last_model_scale_snapshot_ with " << total_snapshot_queries_ << " queries" << std::endl; */
       for (auto& entry : model_counts_) {
-        last_model_scale_snapshot_[entry.first] =
-            (float)(entry.second) / (float)(total_snapshot_queries_);
+        last_model_scale_snapshot_[i] =
+            (float)(model_counts_[i]) / (float)(total_snapshot_queries_);
         /* std::cout << entry.first << " -> " << last_model_scale_snapshot_[entry.first] << std::endl; */
-        entry.second = 0;
+        model_counts_[i] = 0;
+        i = i + 1;
       }
       total_snapshot_queries_ = 0;
     }

@@ -34,12 +34,7 @@ extern std::vector<std::pair<float, std::chrono::system_clock::time_point>> prev
 
 double fib(int);
 
-std::string run_monitor_thread(std::unordered_map<std::string, float> model_throughputs_,
-  std::unordered_map<std::string, float> last_model_scale_snapshot_,
-  std::unordered_map<std::string, int> model_num_replicas_,
-  std::unordered_map<std::string, float> model_max_loads_,
-  std::unordered_map<float, float> current_arrival_counts_,
-  std::unordered_map<float, int> arrival_curve_max_counts);
+std::string run_monitor_thread();
 float check_arrival_curve_exceeded(std::unordered_map<float, float> current_arrival_counts_,
     std::unordered_map<float, int> arrival_curve_max_counts_);
 void register_arrival(std::string model, int query_id);
